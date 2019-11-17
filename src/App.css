@@ -2,21 +2,48 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
+.top-bar {
+  text-align: left;
+  height: 90px;
+  border-bottom: 1px solid black;
+  line-height: 2;
+  margin: 0 auto;
+  font-size: 40px;
+  font-weight: bold;
+  box-sizing: border-box;
+  padding-left: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.histogram-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-around;
+  margin-top: 15px;
+  border: 1px solid red;
+  padding: 10px;
 }
 
-.App-link {
-  color: #09d3ac;
+.selector-container {
+  height: 130px;
+  width: 50%;
+  text-align: left;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.selector-container label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.bar rect {
+  fill: steelblue;
+}
+
+.bar text {
+  fill: #fff;
+  font: 10px sans-serif;
+}
+
+.x-axis-histogram {
+  border: 1px solid red;
 }
