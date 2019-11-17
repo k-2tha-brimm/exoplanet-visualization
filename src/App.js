@@ -68,15 +68,17 @@ class App extends React.Component {
                 bottom: 30,
                 left: 30
               }
-        let width = 400;
-        let height = 200;
+
+        let width = 600;
+        let height = 120;
         
         let container = d3.select(".x-axis-histogram")
           .append("svg")
           .attr("width", width)
-          .attr("height", height)
+          .attr("height", 200)
         
-        let g = container.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        let g = container.append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         let x = d3.scaleLinear()
           .domain(d3.extent(data))
           .rangeRound([0, width])
@@ -102,11 +104,11 @@ class App extends React.Component {
           });
 
           bar.append("rect")
-          .attr("x", 1)
-          .attr("width", x(bins[0].x1) - x(bins[0].x0) - 2)
-          .attr("height", function(d) {
-            return height - y(d.length);
-          });
+            .attr("x", 1)
+            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 2)
+            .attr("height", function(d) {
+              return height - y(d.length);
+            });
       
         bar.append("text")
           .attr("dy", ".75em")
@@ -116,11 +118,22 @@ class App extends React.Component {
           .text(function(d) {
             return formatCount(d.length);
           });
-      
+
         g.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
+          .call(d3.axisLeft(y).tickFormat(d => {
+            return d;
+          }).ticks(5));
+
+        let xAxis = d3.axisBottom(x)
+                    .scale(x);
+
+        container.append("g")
+
+        let xAxisTranslate = height + 10;
+
+        container.append("g")
+          .attr("transform", "translate(" + margin.left + "," + xAxisTranslate + ")")
+          .call(xAxis)
       }
   }
 
@@ -139,13 +152,13 @@ class App extends React.Component {
               bottom: 30,
               left: 30
             }
-      let width = 400;
-      let height = 200;
+      let width = 600;
+      let height = 120;
       
       let container = d3.select(".y-axis-histogram")
         .append("svg")
         .attr("width", width)
-        .attr("height", height)
+        .attr("height", 200)
       
       let g = container.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
       let x = d3.scaleLinear()
@@ -188,10 +201,21 @@ class App extends React.Component {
           return formatCount(d.length);
         });
     
-      g.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        g.append("g")
+          .call(d3.axisLeft(y).tickFormat(d => {
+            return d;
+          }).ticks(5));
+
+        let xAxis = d3.axisBottom(x)
+                    .scale(x);
+
+        container.append("g")
+
+        let xAxisTranslate = height + 10;
+
+        container.append("g")
+          .attr("transform", "translate(" + margin.left + "," + xAxisTranslate + ")")
+          .call(xAxis)
     }
 }
 

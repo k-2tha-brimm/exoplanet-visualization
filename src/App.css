@@ -46,8 +46,14 @@
 
 .x-axis-histogram {
   border: 1px solid red;
+  height: 170px;
+  width: 600px;
+  padding: 5px;
 }
 
 .y-axis-histogram {
   border: 1px solid red;
+  height: 170px;
+  width: 600px;
+  padding: 5px;
 }
