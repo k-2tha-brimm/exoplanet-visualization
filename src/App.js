@@ -31,8 +31,7 @@ class App extends React.Component {
       yVal: ''
     }
 
-    this.handleXChange = this.handleXChange.bind(this);
-    this.handleYChange = this.handleYChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
 
@@ -53,96 +52,26 @@ class App extends React.Component {
     })
   }
 
-  populateXHisto() {
+  populateHisto(val) {
+    let flag = false;
+    let value;
 
-      if (this.state.xVal) {
-
-        let data = this.state.data.map(datum => {
-          return datum[this.state.xVal];
-        });
-
-        let formatCount = d3.format(",.0f");
-        let margin = {
-                top: 10,
-                right: 30,
-                bottom: 30,
-                left: 30
-              }
-
-        let width = 600;
-        let height = 120;
-        
-        let container = d3.select(".x-axis-histogram")
-          .append("svg")
-          .attr("width", width)
-          .attr("height", 200)
-        
-        let g = container.append("g")
-                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        let x = d3.scaleLinear()
-          .domain(d3.extent(data))
-          .rangeRound([0, width])
-
-        let histogram = d3.histogram()
-          .domain(x.domain())
-          .thresholds(x.ticks(5));
-
-        let bins = histogram(data);
-
-        let y = d3.scaleLinear()
-          .domain([0, d3.max(bins, function(d) {
-            return d.length;
-          })])
-          .range([height, 0]);
-
-        let bar = g.selectAll(".bar")
-          .data(bins)
-          .enter().append("g")
-          .attr("class", "bar")
-          .attr("transform", function(d) {
-            return "translate(" + x(d.x0) + "," + y(d.length) + ")";
-          });
-
-          bar.append("rect")
-            .attr("x", 1)
-            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 2)
-            .attr("height", function(d) {
-              return height - y(d.length);
-            });
-      
-        bar.append("text")
-          .attr("dy", ".75em")
-          .attr("y", 6)
-          .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
-          .attr("text-anchor", "middle")
-          .text(function(d) {
-            return formatCount(d.length);
-          });
-
-        g.append("g")
-          .call(d3.axisLeft(y).tickFormat(d => {
-            return d;
-          }).ticks(5));
-
-        let xAxis = d3.axisBottom(x)
-                    .scale(x);
-
-        container.append("g")
-
-        let xAxisTranslate = height + 10;
-
-        container.append("g")
-          .attr("transform", "translate(" + margin.left + "," + xAxisTranslate + ")")
-          .call(xAxis)
+    if (val === "y") {
+      if (this.state.yVal) {
+        flag = true;
+        value = this.state.yVal;
       }
-  }
+    } else {
+      if (this.state.xVal) {
+        flag = true;
+        value = this.state.xVal;
+      }
+    }
 
-  populateYHisto() {
-
-    if (this.state.yVal) {
+    if (flag) {
 
       let data = this.state.data.map(datum => {
-        return datum[this.state.yVal];
+        return datum[value];
       });
 
       let formatCount = d3.format(",.0f");
@@ -155,7 +84,8 @@ class App extends React.Component {
       let width = 600;
       let height = 120;
       
-      let container = d3.select(".y-axis-histogram")
+      d3.select(`.${val}-axis-histogram`).select("svg").remove();
+      let container = d3.select(`.${val}-axis-histogram`)
         .append("svg")
         .attr("width", width)
         .attr("height", 200)
@@ -219,14 +149,14 @@ class App extends React.Component {
     }
 }
 
-  handleXChange(e) {
-    this.setState({ xVal: e.currentTarget.value });
-    this.populateXHisto();
-  }
-
-  handleYChange(e) {
-    this.setState({ yVal: e.currentTarget.value });
-    this.populateYHisto();
+  handleChange(e, val) {
+    if (val === "x") {
+      this.setState({ xVal: e.currentTarget.value });
+      this.populateHisto("x");
+    } else if (val === "y") {
+      this.setState({ yVal: e.currentTarget.value });
+      this.populateHisto("y");
+    }
   }
 
   render() {
@@ -251,7 +181,7 @@ class App extends React.Component {
           <div className="selector-container">
             <label>X-Axis</label>
             <br />
-            <select onChange={(e) => this.handleXChange(e)}>
+            <select onChange={(e) => this.handleChange(e, "x")}>
               {renderedValues}
             </select>
             <p>You have selected {this.state.xVal || `nothing, yet!`}</p>
@@ -260,7 +190,7 @@ class App extends React.Component {
           <div className="selector-container">
             <label>Y-Axis</label>
             <br />
-            <select onChange={(e) => this.handleYChange(e)}>
+            <select onChange={(e) => this.handleChange(e, "y")}>
               {renderedValues}
             </select>
             <p>You have selected {this.state.yVal || `nothing, yet!`}</p>
