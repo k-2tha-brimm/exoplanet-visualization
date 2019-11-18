@@ -37,7 +37,7 @@ class App extends React.Component {
 
   componentDidMount() {
     let arr = [];
-    let cols, x, y;
+    let cols;
 
     // Load the data from the CSV and save it in an array
     d3.csv(data, function(data) {
@@ -183,7 +183,6 @@ populateScatter() {
     }
   });
   
-  console.log(d3.extent(yData));
   d3.select(`.scatter`).select("svg").remove();
   let container = d3.select(".scatter")
                     .append("svg")
