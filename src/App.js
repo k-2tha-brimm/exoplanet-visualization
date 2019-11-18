@@ -262,7 +262,7 @@ populateScatter() {
     return (
       <div className="App">
         <header className="top-bar">
-          Exoplanet Project
+          Exoplanet Data Explorer
         </header>
 
         <div className="histogram-container">
