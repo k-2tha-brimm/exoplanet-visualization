@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
-import Space from './images/space.jpg';
 import * as d3 from 'd3';
 import data from './exoplanets.csv';
 
+// List of columns with non-numeric values
 let STRINGS = [
   "P. Name",
   "P. Name Kepler",
@@ -23,6 +23,7 @@ let STRINGS = [
 
 class App extends React.Component {
 
+  // Set two default values for x and y axes
   constructor(props) {
     super(props);
     this.state = {
@@ -50,6 +51,7 @@ class App extends React.Component {
         data: arr,
         columns: cols
       })
+      // Populate the two histograms and the scatterplot
       this.populateHisto("x");
       this.populateHisto("y");
       this.populateScatter();
@@ -58,10 +60,11 @@ class App extends React.Component {
 
   componentDidUpdate(prevState) {
     if (this.state.xVal !== prevState.xVal) {
+      // If X changes update the x histo and the scatter plot
       this.populateHisto("x");
       this.populateScatter();
     }
-    
+    // If Y changes update the y histo and the scatter plot
     if (this.state.yVal !== prevState.yVal) {
       this.populateHisto("y");
       this.populateScatter();
@@ -85,7 +88,6 @@ class App extends React.Component {
     }
 
     if (flag) {
-
       let data = this.state.data.map(datum => {
         return datum[value];
       });
@@ -175,7 +177,6 @@ populateScatter() {
     }
   });
 
-  
   let yData = this.state.data.map(datum => {
     if (!isNaN(parseInt(datum[this.state.yVal]))) {
       return parseInt(datum[this.state.yVal]);
@@ -232,10 +233,12 @@ populateScatter() {
 
   render() {
 
+    // Filtering out any columns that have non-numeric values
     let values = this.state.columns.filter(column => {
       return !STRINGS.includes(column);
     });
 
+    // Map those values to options in our select element
     let renderedValues = values.map((column, idx) => {
       return (
         <option key={idx} value={column} disabled="">{column}</option>
