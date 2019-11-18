@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import Space from './images/space.jpg';
 import * as d3 from 'd3';
 import data from './exoplanets.csv';
 
@@ -187,7 +188,7 @@ populateScatter() {
   let container = d3.select(".scatter")
                     .append("svg")
                       .attr("width", 1200)
-                      .attr("height", 650)
+                      .attr("height", 450)
                     .append("g")
                       .attr("transform", "translate(" + 20 + "," + 30 + ")");
 
@@ -251,7 +252,7 @@ populateScatter() {
           <div className="selector-container">
             <label>X-Axis</label>
             <br />
-            <select onChange={(e) => this.handleChange(e, "x")}>
+            <select onChange={(e) => this.handleChange(e, "x")} className="select-css">
               {renderedValues}
             </select>
             <p>You have selected {this.state.xVal || `nothing, yet!`}</p>
@@ -260,7 +261,7 @@ populateScatter() {
           <div className="selector-container">
             <label>Y-Axis</label>
             <br />
-            <select onChange={(e) => this.handleChange(e, "y")}>
+            <select onChange={(e) => this.handleChange(e, "y")} className="select-css">
               {renderedValues}
             </select>
             <p>You have selected {this.state.yVal || `nothing, yet!`}</p>
