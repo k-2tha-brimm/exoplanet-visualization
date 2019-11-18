@@ -27,17 +27,17 @@ class App extends React.Component {
     this.state = {
       data: [],
       columns: [],
-      xVal: '',
-      yVal: ''
+      xVal: 'S. Radius (SU)',
+      yVal: 'S. Distance (pc)'
     }
-
+    
     this.handleChange = this.handleChange.bind(this);
   }
 
 
   componentDidMount() {
     let arr = [];
-    let cols;
+    let cols, x, y;
 
     // Load the data from the CSV and save it in an array
     d3.csv(data, function(data) {
@@ -49,7 +49,22 @@ class App extends React.Component {
         data: arr,
         columns: cols
       })
+      this.populateHisto("x");
+      this.populateHisto("y");
+      this.populateScatter();
     })
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.xVal !== prevState.xVal) {
+      this.populateHisto("x");
+      this.populateScatter();
+    }
+    
+    if (this.state.yVal !== prevState.yVal) {
+      this.populateHisto("y");
+      this.populateScatter();
+    }
   }
 
   populateHisto(val) {
@@ -97,7 +112,7 @@ class App extends React.Component {
 
       let histogram = d3.histogram()
         .domain(x.domain())
-        .thresholds(x.ticks(5));
+        .thresholds(x.ticks(10));
 
       let bins = histogram(data);
 
@@ -149,6 +164,62 @@ class App extends React.Component {
     }
 }
 
+populateScatter() {
+
+  let xData = this.state.data.map(datum => {
+    if (!isNaN(parseInt(datum[this.state.xVal]))) {
+      return parseInt(datum[this.state.xVal]);
+    } else {
+      return;
+    }
+  });
+
+  
+  let yData = this.state.data.map(datum => {
+    if (!isNaN(parseInt(datum[this.state.yVal]))) {
+      return parseInt(datum[this.state.yVal]);
+    } else {
+      return;
+    }
+  });
+  
+  console.log(d3.extent(yData));
+  d3.select(`.scatter`).select("svg").remove();
+  let container = d3.select(".scatter")
+                    .append("svg")
+                      .attr("width", 1200)
+                      .attr("height", 650)
+                    .append("g")
+                      .attr("transform", "translate(" + 20 + "," + 30 + ")");
+
+  let x = d3.scaleLinear()
+    .domain(d3.extent(xData))
+    .rangeRound([0, 1200])
+
+  container.append("g")
+    .attr("transform", "translate(30," + 340 + ")")
+    .call(d3.axisBottom(x));
+
+  let y = d3.scaleLinear()
+    .domain(d3.extent(yData))
+    .range([350, 0])     
+    
+  container.append("g")
+    .attr("transform", "translate(30" + -10 + ")")
+    .call(d3.axisLeft(y));
+
+  container.append("g")
+    .selectAll("dot")
+    .data(this.state.data)
+    .enter()
+    .append("circle")
+      .attr("cx", d => { return x(d[this.state.xVal]) })
+      .attr("cy", d => { return y(d[this.state.yVal]) })
+      .attr("r", 1.5)
+      .style("fill", "black")
+      .attr("transform", "translate(30" + -10 + ")");
+}
+
   handleChange(e, val) {
     if (val === "x") {
       this.setState({ xVal: e.currentTarget.value });
@@ -167,7 +238,7 @@ class App extends React.Component {
 
     let renderedValues = values.map((column, idx) => {
       return (
-        <option key={idx} value={column}>{column}</option>
+        <option key={idx} value={column} disabled="">{column}</option>
       )
     });
 
@@ -197,6 +268,12 @@ class App extends React.Component {
             <div className="y-axis-histogram"></div>
           </div>
         </div>
+
+        <h1 className="scatter-title">{this.state.xVal} vs. {this.state.yVal}</h1>
+        <div className="scatterplot-container">
+          <div className="scatter"></div>
+        </div>
+
       </div>
     );
   }

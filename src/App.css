@@ -17,9 +17,9 @@
 .histogram-container {
   display: flex;
   justify-content: space-around;
-  margin-top: 15px;
   border: 1px solid red;
   padding: 10px;
+  height: 300px;
 }
 
 .selector-container {
@@ -56,4 +56,24 @@
   height: 170px;
   width: 600px;
   padding: 5px;
+}
+
+.scatterplot-container {
+  text-align: left;
+  text-decoration: underline;
+  align-content: center;
+  display: inline-block;
+}
+
+.scatter {
+  align-content: center;
+  height: 400px;
+  width: 100%;
+  border: 1px solid blue;
+}
+
+.scatter-title {
+  text-decoration: underline;
+  text-align: left;
+  margin-left: 20px;
 }
